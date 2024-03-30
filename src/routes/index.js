@@ -1,9 +1,9 @@
-import categoriesRoutes from "./categoriesRoutes.js";
-import moviesRoutes from "./movies.js";
-import genresRoutes from "./genreRoutes.js";
+import categoriesRoutes from "./categoriesRoutes";
+import moviesRoutes from "./moviesRotes";
+import genresRoutes from "./genreRoutes";
 export default function routes(app) {
   app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.send("Api server in running on port 9999");
   });
   app.use("/movies", moviesRoutes);
   app.use("/categories", categoriesRoutes);
