@@ -4,7 +4,40 @@ import jwt from "jsonwebtoken";
 import { registerValidator, loginValidator } from "../validations/auth";
 class AuthController {
   //POST Method :auth/login
-  login(req, res) {}
+  async login(req, res) {
+    const { email, password } = req.body;
+    //B1 : validate email, password
+    const { error } = loginValidator.validate(req.body);
+    if (error) {
+      const errors = error.details.map((err) => err.message);
+      return res.status(400).json({
+        message: errors,
+      });
+    }
+    //check email exitsing
+    const userExist = await User.findOne({ email });
+    if (!userExist) {
+      return res.status(400).json({
+        message: "Email does not exist",
+      });
+    }
+    //check password
+    const validPassword = await bcryptjs.compare(password, userExist.password);
+    if (!validPassword) {
+      return res.status(400).json({
+        message: "Invalid password",
+      });
+    }
+    //create token
+    const token = jwt.sign({ id: userExist._id }, "secret_key", {
+      expiresIn: "1d",
+    });
+    // b4 remove password in res
+    res.status(200).json({
+      message: "Login successfully",
+      data: { ...userExist.toObject(), password: undefined, token },
+    });
+  }
   //POST Method :auth/register
   async register(req, res) {
     try {

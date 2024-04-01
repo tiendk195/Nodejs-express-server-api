@@ -10,7 +10,6 @@ const registerValidator = Joi.object({
   }),
   password: Joi.string(),
   avatar: Joi.string(),
-  role: Joi.string(),
 }).options({
   abortEarly: false,
 });
